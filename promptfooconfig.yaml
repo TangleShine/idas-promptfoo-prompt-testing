@@ -1,0 +1,32 @@
+title: "IDAS Promptfoo Prompt Testing Workshop"
+
+description: "IDAS Promptfoo Prompt Testing Workshop"
+
+prompts:
+  - |
+    System: You are a friendly customer service agent named IRAS Bot.
+    User: {{customer_message}}
+    Assistant: Let me help you with that!
+
+providers:
+  - "openai:gpt-4o-mini-2024-07-18"
+
+version: 1
+
+tests:
+  - vars:
+      customer_message: "I would like to find out!"
+    assert:
+      - type: contains
+        value: understand your frustration
+      - type: sentiment
+        value: positive
+      - type: custom-js
+        value: |
+          // Check if response is empathetic
+          return {
+            pass: output.toLowerCase().includes('sorry') || 
+            output.toLowerCase().includes('understand'),
+            score: 1.0,
+            reason: 'Response shows empathy'
+          }
